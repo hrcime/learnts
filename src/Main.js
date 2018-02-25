@@ -20,11 +20,13 @@ class Main {
     requestHandler(req, res) {
         return __awaiter(this, void 0, void 0, function* () {
             let q = url.parse(req.url, true);
-            if (q.pathname != '/api/fshare') {
-                res.write(JSON.stringify({ 'error': true, 'msg': 'API NOT FOUND', 'code': 404 }));
-            }
             let params = q.query;
-            let result = yield Fshare_1.default.get(params.id.toString());
+            if (q.pathname != '/api/fshare' || !params.id) {
+                res.write(JSON.stringify({ 'error': true, 'msg': 'API NOT FOUND', 'code': 404 }));
+                res.end();
+                return;
+            }
+            let result = yield Fshare_1.default.get(params.id);
             if (!!params.format && params.format == 'json') {
                 res.write(JSON.stringify(result));
             }

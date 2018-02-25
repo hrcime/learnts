@@ -11,13 +11,15 @@ class Main {
 
     async requestHandler(req, res) {
         let q = url.parse(req.url, true);
-        if (q.pathname != '/api/fshare') {
-            res.write(JSON.stringify({'error': true, 'msg': 'API NOT FOUND', 'code': 404}));
-        }
-
         let params = q.query;
 
-        let result: any = await Fshare.get(params.id.toString());
+        if (q.pathname != '/api/fshare' || !params.id) {
+            res.write(JSON.stringify({'error': true, 'msg': 'API NOT FOUND', 'code': 404}));
+            res.end();
+            return;
+        }
+
+        let result: any = await Fshare.get(<string>params.id);
 
         if (!!params.format && params.format == 'json') {
             res.write(JSON.stringify(result));

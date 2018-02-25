@@ -24,9 +24,11 @@ class Fshare {
     }
 
     async get(id: string, password: string = '') {
+
         let csrf: any = '';
         let html: any = await this.getHtml(this._config.loginPath);
         if (html.statusCode == 200) {
+
             // DO LOGIN
             csrf = await this.getCsrf(html.body);
             await this.postLogin(csrf);
